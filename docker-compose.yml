@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: yoyo-pos
+    working_dir: /yoyo-pos
+    volumes:
+      - .:/yoyo-pos
+    networks:
+      - app-network
+
+  webserver:
+    image: nginx:alpine
+    container_name: webserver
+    volumes:
+      - .:/yoyo-pos
+      - .docker/nginx/conf.d/default.conf:/etc/nginx/sites-enabled/default
+    ports:
+      - "8000:80"
+    networks:
+      - app-network
+
+  db:
+    image: mysql:8.0
+    container_name: db
+    environment:
+      MYSQL_ROOT_PASSWORD: MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: MYSQL_DATABASE
+    ports:
+      - "3307:3306" # Map host port 3307 to container port 3306
+    volumes:
+      - dbdata:/var/lib/mysql
+    networks:
+      - app-network
+
+volumes:
+  dbdata:
+
+networks:
+  app-network:
+    driver: bridge
+
