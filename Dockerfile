@@ -14,11 +14,11 @@ RUN apt-get update && apt-get install -y \
     && docker-php-ext-install zip
 
 # Set the working directory
-COPY ./yoyo-pos /app
-WORKDIR /app
+COPY ./yoyo-pos /yoyo-pos
+WORKDIR /yoyo-pos
 
-RUN chown -R www-data:www-data /app \
-    && chmod +x /app/storage
+RUN chown -R www-data:www-data /yoyo-pos \
+    && chmod +x /yoyo-pos/storage
 
 # install composer
 COPY --from=composer:2.6.5 /usr/bin/composer /usr/local/bin/composer
